@@ -24,4 +24,8 @@ public class AuctionItem implements Serializable{
     public String getDescription() { 
         return description; 
     }
+
+    public int getHighestBid() {
+        return highestBid;
+    }
 }
