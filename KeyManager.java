@@ -8,6 +8,19 @@ import javax.crypto.KeyGenerator;
 
 public class KeyManager {
     public static SecretKey loadKey() throws Exception {
+        try{
+            return loadKeyRoutine();
+        } catch (Exception e){
+            try{
+                return generateKey();
+            } catch (Exception e1){
+                System.out.println("Error generating new key");
+                return null;
+            }
+        }
+    }
+
+    private static SecretKey loadKeyRoutine() throws Exception {
         try (FileInputStream file = new FileInputStream("keys/testKey.aes");
             //deserialize the input from the file
             ObjectInputStream object = new ObjectInputStream(file)) {

@@ -16,15 +16,7 @@ public class AuctionServer extends UnicastRemoteObject implements Auction{
         super(); //initates uro, binding to ports  etc. needed for RMI to function
         this.items = new HashMap<>();
 
-        try {
-            this.key = KeyManager.loadKey();
-        } catch (Exception e){
-            try{
-                this.key = KeyManager.generateKey();
-            }catch (Exception e2){
-                System.out.println("Error generating key");
-            }
-        }
+        this.key = KeyManager.loadKey();
 
 
         //test items to laod into the server
