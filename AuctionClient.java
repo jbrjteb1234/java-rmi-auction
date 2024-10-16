@@ -20,7 +20,12 @@ public class AuctionClient {
                 return;
             }
 
-            SealedObject sealedItem = auction.getSpec(30);
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Enter item ID: ");
+            int itemID = scanner.nextInt(); 
+
+            SealedObject sealedItem = auction.getSpec(itemID);
+            scanner.close();
             SecretKey secretKey = KeyManager.loadKey();
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
