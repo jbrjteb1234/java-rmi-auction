@@ -32,8 +32,20 @@ public class AuctionServer extends UnicastRemoteObject implements Auction{
     }   
 
     public SealedObject getSpec(int itemID) throws RemoteException {
-        //TODO: IMPLEMENT
-        return null;
+        try {
+            AuctionItem item = items.get(itemID);
+            if (item == null) {
+                return null; // Item not found
+            }
+            //encrypt and return the auction item
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            SealedObject sealedItem = new SealedObject(item, cipher);
+            return sealedItem;
+
+        } catch (Exception e) {
+            throw new RemoteException("Error retrieving item");
+        }
     }
 
     public static void main(String[] args){
