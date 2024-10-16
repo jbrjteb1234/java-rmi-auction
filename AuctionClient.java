@@ -20,6 +20,15 @@ public class AuctionClient {
                 return;
             }
 
+            SealedObject sealedItem = auction.getSpec(30);
+            SecretKey secretKey = KeyManager.loadKey();
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+
+            AuctionItem item = (AuctionItem) sealedItem.getObject(cipher);
+            System.out.println(item.getName());
+
+
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
