@@ -1,6 +1,9 @@
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -21,10 +24,13 @@ public class KeyManager {
     }
 
     private static SecretKey loadKeyRoutine() throws Exception {
-        try (FileInputStream file = new FileInputStream("keys/testKey.aes");
+        try (FileInputStream file = new FileInputStream("keys/testKey.aes")){
             //deserialize the input from the file
-            ObjectInputStream object = new ObjectInputStream(file)) {
-            return (SecretKey) object.readObject();
+            byte[] keyBytes = new byte[16];
+            if (file.read(keyBytes) != keyBytes.length) {
+                throw new IOException("No keys found");
+            }
+            return new SecretKeySpec(keyBytes, "AES");
         }
     }
 
@@ -34,9 +40,8 @@ public class KeyManager {
 
         SecretKey newKey = gen.generateKey();
 
-        try (FileOutputStream fos = new FileOutputStream("keys/testKey.aes");
-             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-            oos.writeObject(newKey);
+        try (FileOutputStream fos = new FileOutputStream("keys/testKey.aes")){
+            fos.write(newKey.getEncoded());
         }
 
 
