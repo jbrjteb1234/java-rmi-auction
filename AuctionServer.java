@@ -51,7 +51,7 @@ public class AuctionServer extends UnicastRemoteObject implements Auction{
     public static void main(String[] args){
         try{
             AuctionServer server  = new AuctionServer();    //new server
-            Naming.rebind("//localhost/Auction", server);               //binds server to Auction
+            Naming.rebind("Auction", server);               //binds server to Auction
         }catch (Exception e) {
             System.out.println("Error creating server\n");
         }
