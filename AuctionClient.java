@@ -1,6 +1,3 @@
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
