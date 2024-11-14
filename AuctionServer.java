@@ -8,43 +8,48 @@ import javax.crypto.SealedObject;
 
 public class AuctionServer extends UnicastRemoteObject implements Auction{
 
-    private HashMap<Integer,AuctionItem> items;
-    private SecretKey key;
+    private ConcurrentHashMap<Integer, AuctionItem> items;
+    private ConcurrentHashMap<Integer, PublicKey> users;
+    private ConcurrentHashMap<Integer, String> activeTokens;
+    private KeyPair serverKeyPair;
 
     public AuctionServer() throws Exception {
         super(); //initates uro, binding to ports  etc. needed for RMI to function
-        this.items = new HashMap<>();
-
-        this.key = KeyManager.loadKey();
-
-
-        //test items to laod into the server
-        AuctionItem test1 = new AuctionItem(10, "car", "bmw");
-        AuctionItem test2 = new AuctionItem(20, "watch", "rolex");
-        AuctionItem test3 = new AuctionItem(30, "plane", "airbus a380");
-
-        this.items.put(test1.getItemID(), test1);
-        this.items.put(test2.getItemID(), test2);
-        this.items.put(test3.getItemID(), test3);
-
-        System.out.println("Auction server instantiated");
+        this.items = new ConcurrentHashMap<>();
+        this.users = new ConcurrentHashMap<>();
+        this.activeTokens = new ConcurrentHashMap<>();
     }   
 
-    public SealedObject getSpec(int itemID) throws RemoteException {
-        try {
-            AuctionItem item = items.get(itemID);
-            if (item == null) {
-                return null; // Item not found
-            }
-            //encrypt and return the auction item
-            Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            SealedObject sealedItem = new SealedObject(item, cipher);
-            return sealedItem;
+    public int register(String email, PublicKey pkey) throws RemoteException{
 
-        } catch (Exception e) {
-            throw new RemoteException("Error retrieving item");
-        }
+    }
+    
+    public ChallengeInfo challenge(int userID, String clientChallenge) throws RemoteException{
+
+    }
+    
+    public TokenInfo authenticate(int userID, byte signature[]) throws RemoteException{
+
+    }
+    
+    public AuctionItem getSpec(int userID, int itemID, String token) throws RemoteException{
+
+    }
+    
+    public int newAuction(int userID, AuctionSaleItem item, String token) throws RemoteException{
+
+    }
+    
+    public AuctionItem[] listItems(int userID, String token) throws RemoteException{
+
+    }
+    
+    public AuctionResult closeAuction(int userID, int itemID, String token) throws RemoteException{
+
+    }
+    
+    public boolean bid(int userID, int itemID, int price, String token) throws RemoteException{
+
     }
 
     public static void main(String[] args){
