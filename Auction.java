@@ -2,6 +2,8 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import javax.crypto.SealedObject;
 
+import java.security.PublicKey;
+
 public interface Auction extends Remote {
 
     public int register(String email, PublicKey pkey) throws RemoteException;
