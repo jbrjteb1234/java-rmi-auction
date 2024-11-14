@@ -93,9 +93,25 @@ public class AuctionServer extends UnicastRemoteObject implements Auction{
             throw new RemoteException("Authentication error");
         }
     }
-    
-    public AuctionItem getSpec(int userID, int itemID, String token) throws RemoteException{
 
+    private boolean validateToken(int userID, String token) {
+        TokenInfo tokenInfo = activeTokens.get(userID);
+        if (tokenInfo == null || !tokenInfo.token.equals(token)) {
+            return false;
+        }
+        if (System.currentTimeMillis() > tokenInfo.expiryTime) {
+            activeTokens.remove(userID); // Token expired
+            return false;
+        }
+        activeTokens.remove(userID); // Token used
+        return true;
+    }
+    
+    public AuctionItem getSpec(int userID, int itemID, String token) throws RemoteException {
+        if (!validateToken(userID, token)) {
+            return null;
+        }
+        return items.get(itemID);
     }
     
     public int newAuction(int userID, AuctionSaleItem item, String token) throws RemoteException{
