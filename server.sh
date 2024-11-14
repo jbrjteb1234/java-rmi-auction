@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the file path
-FILE="keys/testKeys.aes"
+FILE="keys/server_public.key"
 
 # Check if the file exists
 if [ ! -f "$FILE" ]; then
