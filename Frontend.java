@@ -10,30 +10,44 @@ public class Frontend extends UnicastRemoteObject implements Auction {
 
     public Frontend() throws RemoteException {
         super();
+
+        try{
+            new ReplicaRegistry();
+            Naming.rebind("rmi://localhost/FrontEnd", this);
+        } catch (Exception e) {
+            System.err.println("Error starting frontend: " + e.getMessage());
+        }
+
         primaryReplicaID = -1;
-        new ReplicaRegistry();
         System.out.println("Frontend is up and running.");
     }
 
-    // Select the first available replica as the primary
     private void failover() {
         try {
             ReplicaRegistryInterface replicaRegistry = (ReplicaRegistryInterface) Naming.lookup("rmi://localhost/ReplicaRegistry");
             List<Integer> replicaIDs = replicaRegistry.getReplicaIDList();
-            int failedPrimaryID = this.primaryReplicaID;
+            List<Integer> failedIDs = new ArrayList<>();
+            boolean foundNewPrimary = false;
+            failedIDs.add(this.primaryReplicaID);
             System.out.println(replicaIDs);
             for (int replicaID : replicaIDs) {
                 try {
                     ((Auction)Naming.lookup("rmi://localhost/Replica" + replicaID)).listItems();
-                    this.primaryReplicaID = replicaID;
+                    if(!foundNewPrimary){
+                        this.primaryReplicaID = replicaID;
+                        foundNewPrimary=true;
+                    }
                     System.out.println("Connected to primary replica: " + replicaID);
-                    break;
                 } catch (Exception e) {
+                    failedIDs.add(replicaID);
                     System.err.println("Failed to connect to replica: " + replicaID);
                 }
             }
-            if(failedPrimaryID != -1){
-                replicaRegistry.recoverReplica(failedPrimaryID);
+
+            for(int failedID : failedIDs){
+                if(failedID != -1){
+                    replicaRegistry.recoverReplica(failedID);
+                }
             }
 
         } catch (Exception e) {
@@ -104,10 +118,9 @@ public class Frontend extends UnicastRemoteObject implements Auction {
 
     public static void main(String[] args) {
         try {
-            Naming.rebind("rmi://localhost/FrontEnd", new Frontend());
+            new Frontend();
         } catch (Exception e) {
             System.err.println("Error starting frontend: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 }

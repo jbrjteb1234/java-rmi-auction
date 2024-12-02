@@ -9,7 +9,7 @@ echo "Starting the Front-End..."
 java Frontend &
 frontend_pid=$!
 
-sleep 1
+sleep 2
 
 # Start the replicas
 echo "Starting replicas..."

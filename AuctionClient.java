@@ -25,13 +25,15 @@ public class AuctionClient {
             System.out.println("Registration successful. Your User ID is: " + userID);
 
             while (true) {
-                System.out.println("\nAuction Client Menu:");
+                System.out.println("\n\n=================");
+                System.out.println("Auction Client Menu:");
                 System.out.println("1. Create Auction");
                 System.out.println("2. List Auctions");
                 System.out.println("3. Get Auction Details");
                 System.out.println("4. Place a Bid");
                 System.out.println("5. Close Auction");
                 System.out.println("6. Exit");
+                System.out.println("=================\n\n");
                 System.out.print("Choose an option: ");
 
                 int choice = Integer.parseInt(scanner.nextLine());
@@ -61,6 +63,7 @@ public class AuctionClient {
                         AuctionItem[] items = auction.listItems();
                         if (items != null) {
                             for (AuctionItem auctionItem : items) {
+                                System.out.println("=================");
                                 System.out.println("Item ID: " + auctionItem.itemID);
                                 System.out.println("Name: " + auctionItem.name);
                                 System.out.println("Description: " + auctionItem.description);
